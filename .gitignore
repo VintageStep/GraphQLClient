@@ -32,4 +32,5 @@ ehthumbs.db
 # Package-specific
 /[Aa]ssets/TextMesh Pro/
 /[Aa]ssets/Plugins/Newtonsoft.Json*
-/[Aa]ssets/GraphQL/Unity/Core/Test/PokemonQueriesExample
+/[Aa]ssets/GraphQL/Unity/Core/Test/PokemonQueriesExample.cs
+/[Aa]ssets/GraphQL/Unity/Core/Test/PokemonQueriesExample.cs.meta
