@@ -1,0 +1,20 @@
+{
+  "name": "com.vintagestep.graphqlclient",
+  "version": "0.1.0",
+  "displayName": "GraphQL Client",
+  "description": "A GraphQL client for Unity",
+  "unity": "2022.3.21f",
+  "dependencies": {
+	  "com.unity.nuget.newtonsoft-json": "3.0.2"
+  },
+  "keywords": [
+    "graphql",
+    "api",
+    "client"
+  ],
+  "author": {
+    "name": "Thomas Ortega",
+    "email": "thomassilva90@gmail.com",
+    "url": ""
+  }
+}
