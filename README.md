@@ -144,12 +144,12 @@ This project uses the PokeAPI GraphQL Beta to showcase the package's capabilitie
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-##License
+## License
 
 This project is licensed under the MIT License - see the LICENSE.md file for details.
 
 
-##Acknowledgments
+## Acknowledgments
 
 - Thanks to PokeAPI for providing the Pokémon data and their GraphQL console as a learning tool.
 - Thanks to the GraphQL-dotnet organization for providing documentation and usage examples.
