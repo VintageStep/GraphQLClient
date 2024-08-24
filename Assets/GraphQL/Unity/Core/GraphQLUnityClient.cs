@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace GraphQL.Unity.Core
+namespace GraphQL.Unity
 {
     /// <summary>
     /// Provides a client for making GraphQL requests in Unity applications.

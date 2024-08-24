@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace GraphQL.Unity.Core
+namespace GraphQL.Unity
 {
     /// <summary>
     /// Provides helper methods for JSON serialization and deserialization using Newtonsoft.Json.

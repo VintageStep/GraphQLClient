@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace GraphQL.Unity.Core
+namespace GraphQL.Unity
 {
     /// <summary>
     /// Represents a GraphQL request to be sent to a server.

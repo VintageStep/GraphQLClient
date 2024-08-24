@@ -2,7 +2,7 @@ using UnityEngine;
 using System;
 using System.Threading.Tasks;
 
-namespace GraphQL.Unity.Core
+namespace GraphQL.Unity
 {
     /// <summary>
     /// A MonoBehaviour wrapper for the GraphQLUnityClient, allowing it to be attached to GameObjects and configured in the Unity Inspector.

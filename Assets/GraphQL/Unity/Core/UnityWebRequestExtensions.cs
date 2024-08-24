@@ -2,7 +2,7 @@ using UnityEngine.Networking;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-namespace GraphQL.Unity.Core
+namespace GraphQL.Unity
 {
     /// <summary>
     /// Provides extension methods for UnityWebRequestAsyncOperation to enable async/await pattern usage.

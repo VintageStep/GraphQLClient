@@ -2,8 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
-using GraphQL.Unity.Core;
-using GraphQL.Unity.Test;
+using GraphQL.Unity;
 using System.Collections;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
@@ -131,6 +130,18 @@ namespace GraphQL.Unity.Demo
                     .EndObject()
                 .EndObject()
                 .Build();
+
+            var query2 = new QueryBuilder()
+                .Operation("GetPokemon")
+                .Variable("name", name, "String!")
+                .BeginObject("pokemon(name: $name)")
+                    .Field("id")
+                    .Field("name")
+                    .Field("weight")
+                .EndObject()
+                .Build();
+
+            Debug.Log($"valid?: {query2.query}");
 
             dataLoadedTcs = new TaskCompletionSource<bool>();
             graphQLClient.SendQuery<MovesLearnedByPokemonResponse>(query, OnPokemonDataReceived);

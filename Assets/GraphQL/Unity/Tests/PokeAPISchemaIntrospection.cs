@@ -1,13 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
-using GraphQL.Unity.Core;
+using GraphQL.Unity;
 using System;
 using Newtonsoft.Json;
 using System.IO;
 
 using System.Linq;
 
-namespace GraphQL.Unity.Test
+namespace GraphQL.Unity.Tests
 {
 
     public class PokeAPISchemaIntrospection : MonoBehaviour

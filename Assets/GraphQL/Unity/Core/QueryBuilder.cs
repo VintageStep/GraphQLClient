@@ -1,7 +1,8 @@
 using System.Text;
 using System.Collections.Generic;
+using System;
 
-namespace GraphQL.Unity.Core
+namespace GraphQL.Unity
 {
     /// <summary>
     /// Provides a fluent interface for building GraphQL queries.
@@ -13,6 +14,8 @@ namespace GraphQL.Unity.Core
         private List<string> _variableDefinitions = new List<string>();
         private int _indent = 0;
         private bool _isFirstField = true;
+
+        private bool hasObject = false;
 
         /// <summary>
         /// Starts a new GraphQL operation (query, mutation, or subscription).
@@ -35,6 +38,7 @@ namespace GraphQL.Unity.Core
         /// <returns>The QueryBuilder instance for method chaining.</returns>
         public QueryBuilder Variable(string name, object value, string type)
         {
+            
             _variables[name] = value;
             _variableDefinitions.Add($"${name}: {type}");
             return this;
@@ -66,6 +70,7 @@ namespace GraphQL.Unity.Core
             _query.AppendLine($"{new string(' ', _indent * 2)}{name} {{");
             _indent++;
             _isFirstField = true;
+            hasObject = true;
             return this;
         }
 
@@ -104,6 +109,10 @@ namespace GraphQL.Unity.Core
         /// <returns>A GraphQLRequest object representing the built query.</returns>
         public GraphQLRequest Build()
         {
+            if (_variables.Count > 0 && !hasObject)
+            {
+                throw new InvalidOperationException("Cannot create a query with variables but no object. Use BeginObject() to define at least one object in your query.");
+            }
             // Close any remaining open braces
             while (_indent > 0)
             {
