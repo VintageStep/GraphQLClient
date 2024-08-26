@@ -12,6 +12,8 @@ namespace GraphQL.Unity
         [SerializeField] private string graphQLUrl = "https://api.example.com/graphql";
         [SerializeField] private string authToken;
 
+        private IWebRequestFactory _webRequestFactory;
+
         private GraphQLUnityClient _client;
 
         /// <summary>
@@ -23,7 +25,7 @@ namespace GraphQL.Unity
             {
                 if (_client == null)
                 {
-                    _client = new GraphQLUnityClient(graphQLUrl, authToken);
+                    _client = new GraphQLUnityClient(graphQLUrl, authToken, new UnityWebRequestFactory());
                 }
                 return _client;
             }
@@ -37,9 +39,10 @@ namespace GraphQL.Unity
         /// <param name="callback">A callback to handle the response or any errors.</param>
         public async void SendQuery<TResponse>(GraphQLRequest request, Action<GraphQLResponse<TResponse>, Exception> callback)
         {
+
             try
             {
-                var response = await Client.SendQueryAsync<TResponse>(request);
+                var response = await GetClient().SendQueryAsync<TResponse>(request);
                 callback(response, null);
             }
             catch (GraphQLException ex)
@@ -60,6 +63,36 @@ namespace GraphQL.Unity
                 callback(null, ex);
             }
         }
+
+        /// <summary>
+        /// Method created in order to inject a mockup WebRequestFactory for testing purposes without interfering with the code in 'production'
+        /// </summary>
+        /// <param name="factory"></param>
+        public void SetWebRequestFactory(IWebRequestFactory factory)
+        {
+            WebRequestFactory = factory;
+            _client = new GraphQLUnityClient(graphQLUrl, authToken, factory);
+        }
+
+        /// <summary>
+        /// Method created in order to expose GraphQLClient for testing purposes without interfering with the code in 'production'
+        /// </summary>
+        /// <param name="factory"></param>
+        private GraphQLUnityClient GetClient()
+        {
+            if (_client == null)
+            {
+                _client = new GraphQLUnityClient(graphQLUrl, authToken, _webRequestFactory ?? new UnityWebRequestFactory());
+            }
+            return _client;
+        }
+
+        /// <summary>
+        /// Method created in order to expose WebRequestFactory for testing purposes without interfering with the code in 'production'
+        /// </summary>
+        /// <param name="factory"></param>
+        public IWebRequestFactory WebRequestFactory { get; private set; }
+
 
     }
 }

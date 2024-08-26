@@ -140,9 +140,43 @@ This pre-release version has several limitations that will be addressed in futur
 For more information on GraphQL, refer to the official GraphQL documentation.
 This project uses the PokeAPI GraphQL Beta to showcase the package's capabilities.
 
-##Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Testing
+
+This project includes unit tests, integration tests, and performance tests to ensure the quality and reliability of the GraphQL client. The tests are located in the `Tests` folder.
+
+### Running Tests
+
+To run the tests in Unity:
+
+1. Open the Unity Test Runner (Window > General > Test Runner)
+2. Select "Play Mode" for integration and performance tests
+3. Click "Run All" or select specific tests to run
+
+### Mocking Unity's Networking Classes
+
+For testing purposes, we've implemented mock classes for Unity's networking functionality:
+
+- `UnityWebRequestWrapper`: A wrapper around UnityWebRequest that implements the `IWebRequest` interface
+- `UnityWebRequestFactory`: A factory class for creating `IWebRequest` instances
+
+These classes allow us to mock network requests in our tests, ensuring that we can test our GraphQL client without making actual network calls.
+
+### Performance Testing
+
+Performance tests are included to measure query execution time and memory usage. These tests help ensure that the GraphQL client performs efficiently in various scenarios.
+
+## Contributing
+
+When contributing to this project, please ensure that you:
+
+1. Write unit tests for new functionality
+2. Update existing tests when modifying code
+3. Run all tests before submitting a pull request
+4. Update documentation, including XML comments and the README, as necessary
 
 ## License
 

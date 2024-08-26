@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.Networking;
+
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Net;
 
 namespace GraphQL.Unity
 {
@@ -15,16 +17,25 @@ namespace GraphQL.Unity
         private readonly string _authToken;
         private readonly Dictionary<string, object> _cache = new Dictionary<string, object>();
 
+        private readonly IWebRequestFactory _webRequestFactory;
+
         /// <summary>
         /// Initializes a new instance of the GraphQLUnityClient.
         /// </summary>
         /// <param name="url">The URL of the GraphQL endpoint.</param>
         /// <param name="authToken">Optional authentication token, null by default.</param>
-        public GraphQLUnityClient(string url, string authToken = null)
+        public GraphQLUnityClient(string url, string authToken = null, IWebRequestFactory webRequestFactory = null)
         {
             _url = url;
             _authToken = authToken;
+            _webRequestFactory = webRequestFactory ?? new UnityWebRequestFactory();
         }
+
+        /// <summary>
+        /// Method to access a copy of the URL of the GraphQL endpoint.
+        /// </summary>
+        /// <returns> A String of the assigned url</returns>
+        public string Url => _url;
 
         /// <summary>
         /// Sends a GraphQL query asynchronously and returns the response.
@@ -48,50 +59,40 @@ namespace GraphQL.Unity
             };
 
             string jsonPayload = JsonHelper.Serialize(requestObject);
-            Debug.Log($"Sending request: {jsonPayload}");
+            //Debug.Log($"Sending request: {jsonPayload}");
 
-            using (UnityWebRequest webRequest = new UnityWebRequest(_url, "POST"))
+            var webRequest = _webRequestFactory.CreateWebRequest(_url, "POST");
+
+            // TODO test headers and auth token
+            webRequest.SetRequestHeader("Content-Type", "application/json");
+            if (!string.IsNullOrEmpty(_authToken))
             {
-                byte[] bodyRaw = System.Text.Encoding.UTF8.GetBytes(jsonPayload);
-                webRequest.uploadHandler = new UploadHandlerRaw(bodyRaw);
-                webRequest.downloadHandler = new DownloadHandlerBuffer();
-                webRequest.SetRequestHeader("Content-Type", "application/json");
+                webRequest.SetRequestHeader("Authorization", $"Bearer {_authToken}");
+            }
+            webRequest.SetRequestBody(jsonPayload);
 
-                if (!string.IsNullOrEmpty(_authToken))
+            try
+            {
+                string responseJson = await webRequest.SendWebRequestAsync();
+                //Debug.Log($"Raw response: {responseJson}");
+
+                GraphQLResponse<TResponse> response = JsonHelper.Deserialize<GraphQLResponse<TResponse>>(responseJson);
+
+                if (response.HasErrors)
                 {
-                    webRequest.SetRequestHeader("Authorization", $"Bearer {_authToken}");
+                    throw new GraphQLException($"GraphQL errors: {response.Errors.GetErrorSummary()}", response.Errors);
                 }
 
-                try
+                if (request.UseCache)
                 {
-                    await webRequest.SendWebRequest();
-
-                    if (webRequest.result != UnityWebRequest.Result.Success)
-                    {
-                        throw new GraphQLException($"Network error: {webRequest.error}", null);
-                    }
-
-                    string responseJson = webRequest.downloadHandler.text;
-                    Debug.Log($"Raw response: {responseJson}");
-
-                    GraphQLResponse<TResponse> response = JsonHelper.Deserialize<GraphQLResponse<TResponse>>(responseJson);
-
-                    if (response.HasErrors)
-                    {
-                        throw new GraphQLException($"GraphQL errors: {response.Errors.GetErrorSummary()}", response.Errors);
-                    }
-
-                    if (request.UseCache)
-                    {
-                        _cache[cacheKey] = response;
-                    }
-
-                    return response;
+                    _cache[cacheKey] = response;
                 }
-                catch (Exception ex) when (!(ex is GraphQLException))
-                {
-                    throw new GraphQLException($"Unexpected error: {ex.Message}", null);
-                }
+
+                return response;
+            }
+            catch (Exception ex) when (!(ex is GraphQLException))
+            {
+                throw new GraphQLException($"Unexpected error: {ex.Message}", null);
             }
         }
 
@@ -105,4 +106,5 @@ namespace GraphQL.Unity
             return JsonHelper.Serialize(new { request.query, request.variables });
         }
     }
+
 }

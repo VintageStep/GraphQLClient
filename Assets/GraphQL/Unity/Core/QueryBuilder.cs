@@ -5,7 +5,7 @@ using System;
 namespace GraphQL.Unity
 {
     /// <summary>
-    /// Provides a fluent interface for building GraphQL queries.
+    /// Provides an interface for building GraphQL queries.
     /// </summary>
     public class QueryBuilder
     {

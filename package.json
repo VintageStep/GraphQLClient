@@ -5,7 +5,8 @@
   "description": "A GraphQL client for Unity",
   "unity": "2022.3.21f",
   "dependencies": {
-	  "com.unity.nuget.newtonsoft-json": "3.0.2"
+	  "com.unity.nuget.newtonsoft-json": "3.0.2",
+	  "net.tnrd.nsubstitute": "5.1.0"
   },
   "keywords": [
     "graphql",
